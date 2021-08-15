@@ -1,0 +1,12 @@
+diff --git a/Project.xml b/Project.xml
+index 75bbbc2..9cc49fb 100644
+--- a/Project.xml
++++ b/Project.xml
+@@ -93,7 +93,6 @@
+ 	<assets path="assets/week6"    library="week6"    exclude="*.mp3" unless="web"/>
+ 	<assets path="assets/bonusWeek"    library="bonusWeek"    exclude="*.mp3" unless="web"/>
+ 	<assets path="assets/bonusWeek"    library="bonusWeek"    exclude="*.ogg" if="web"/>
+-	<assets path="assets/replays"    library="replays"/>
+ 	<assets path='example_mods' rename='mods' embed='false'/>
+ 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
+ 	<!-- <template path='mods' /> -->

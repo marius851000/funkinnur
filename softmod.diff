@@ -1,0 +1,68 @@
+diff --git a/source/CheckText.hx b/source/CheckText.hx
+index ffc9b93..a37928b 100644
+--- a/source/CheckText.hx
++++ b/source/CheckText.hx
+@@ -24,8 +24,9 @@ import io.newgrounds.NG;
+ import lime.app.Application;
+ import openfl.Assets;
+ 
+-
++#if windows
+ import Discord.DiscordClient;
++#end
+ 
+ #if cpp
+ import sys.thread.Thread;
+@@ -41,8 +42,9 @@ class CheckText extends MusicBeatState
+ 
+     override  function create():Void
+ 	{
++        #if windows
+         DiscordClient.changePresence("Inside The Credits Menu", null);
+-
++        #end
+ 
+         var pic:FlxSprite = new FlxSprite(0, 0).loadGraphic(Paths.image('menuGB'));
+ 		pic.setGraphicSize(Std.int(pic.width * 1.0));
+diff --git a/source/CreditsMenu.hx b/source/CreditsMenu.hx
+index e38504d..ec204d3 100644
+--- a/source/CreditsMenu.hx
++++ b/source/CreditsMenu.hx
+@@ -15,7 +15,9 @@ import flixel.util.FlxColor;
+ import lime.utils.Assets;
+ import flixel.addons.transition.FlxTransitionableState;
+ 
++#if windows
+ import Discord.DiscordClient;
++#end
+ 
+ using StringTools;
+ 
+@@ -92,8 +94,10 @@ class CreditsMenu extends MusicBeatState
+ 		//}
+ 		
+ 		// Updating Discord Rich Presence
++		#if windows
+ 		DiscordClient.changePresence("Inside The Credits Menu...", null);
+-
++		#end
++		
+ 		if(!FlxG.sound.music.playing){
+ 			FlxG.sound.playMusic(Paths.music("SoftConfig", "shared"));
+ 		}
+diff --git a/source/WarningState.hx b/source/WarningState.hx
+index b1aba40..3fcab53 100644
+--- a/source/WarningState.hx
++++ b/source/WarningState.hx
+@@ -43,8 +43,10 @@ class WarningState extends MusicBeatState
+ 
+     override  function create():Void
+ 	{
++        #if windows
+         DiscordClient.changePresence("Inside The Opening Menu", null);
+-
++        #end
++        
+         FlxG.sound.music.stop();
+         warningMusic = new FlxSound().loadEmbedded(Paths.music("PauseTheme-Soft", "shared"), true, true);
+ 		warningMusic.volume = 0;
