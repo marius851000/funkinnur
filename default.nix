@@ -201,4 +201,18 @@ in
         cp art/icon512.png $out/share/icons/hicolor/512x512/apps/softmod.png
       '';
     };
+  explorers_of_death = mkFunkinMod {
+    pname = "explorers-of-death";
+    version = "demo";
+    binaryName = "PsychEngine";
+    renameBinary = "explorers-of-death";
+    humanName = "Friday Night Funkin': Explorers of Death [DEMO]";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "Milo008";
+      repo = "FNF-Explorers-of-Death-source-code";
+      rev = "8d1c480528874c3e616519ec776193f24f07e99e";
+      sha256 = "sha256-nODCg4ZlrDPDe/ET4br6bQaht8ybNQOLlk2OqTYhFbE=";
+    };
+  };
 }

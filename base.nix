@@ -9,7 +9,8 @@
   humanName,
   desktopOverride ? {},
   metaOverride ? {},
-  buildInputs ? [ alsaLib libpulseaudio libGL libX11 libXdmcp libXext libXi libXinerama libXrandr luajit ],
+  extraBuildInputs ? [],
+  buildInputs ? [ alsaLib libpulseaudio libGL libX11 libXdmcp libXext libXi libXinerama libXrandr luajit ] ++ extraBuildInputs,
   nativeBuildInputs ? [ haxe neko makeWrapper ]
     ++ (with haxePackages; [
       hxcpp
@@ -23,7 +24,7 @@
       polymod
       discord_rpc
       linc_luajit
-    ]),
+    ]) ++ extraBuildInputs,
   patches ? [],
   installIcon ? "",
   extraAttributes ? {},
