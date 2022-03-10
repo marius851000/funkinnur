@@ -1,0 +1,3 @@
+an archive of all the sources
+auto check for update
+flatpack !!!

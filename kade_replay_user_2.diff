@@ -1,0 +1,45 @@
+diff --git a/source/LoadReplayState.hx b/source/LoadReplayState.hx
+index 135c5ae..c024c02 100644
+--- a/source/LoadReplayState.hx
++++ b/source/LoadReplayState.hx
+@@ -40,7 +40,7 @@ class LoadReplayState extends MusicBeatState
+ 	{
+ 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+         #if sys
+-		controlsStrings = sys.FileSystem.readDirectory(Sys.getCwd() + "/assets/replays/");
++		controlsStrings = sys.FileSystem.readDirectory(lime.system.System.applicationStorageDirectory + "/assets/replays/");
+         #end
+ 		trace(controlsStrings);
+ 
+diff --git a/source/Replay.hx b/source/Replay.hx
+index 5d88f32..e2d9458 100644
+--- a/source/Replay.hx
++++ b/source/Replay.hx
+@@ -129,10 +129,10 @@ class Replay
+ 	public function LoadFromJSON()
+ 	{
+ 		#if sys
+-		trace('loading ' + Sys.getCwd() + 'assets/replays/' + path + ' replay...');
++		trace('loading ' + lime.system.System.applicationStorageDirectory + 'assets/replays/' + path + ' replay...');
+ 		try
+ 		{
+-			var repl:ReplayJSON = cast Json.parse(File.getContent(Sys.getCwd() + "assets/replays/" + path));
++			var repl:ReplayJSON = cast Json.parse(File.getContent(lime.system.System.applicationStorageDirectory + "assets/replays/" + path));
+ 			replay = repl;
+ 		}
+ 		catch(e)
+diff --git a/source/TitleState.hx b/source/TitleState.hx
+index 1097a24..702ab0d 100644
+--- a/source/TitleState.hx
++++ b/source/TitleState.hx
+@@ -58,8 +58,8 @@ class TitleState extends MusicBeatState
+ 		#end
+ 		
+ 		#if sys
+-		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
+-			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
++		if (!sys.FileSystem.exists(lime.system.System.applicationStorageDirectory + "/assets/replays"))
++			sys.FileSystem.createDirectory(lime.system.System.applicationStorageDirectory + "/assets/replays");
+ 		#end
+ 
+ 		@:privateAccess

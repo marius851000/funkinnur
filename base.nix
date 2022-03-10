@@ -57,7 +57,7 @@ let
     name = pname;
     exec = renameBinary;
     desktopName = humanName;
-    categories = "Game;ArcadeGame";
+    categories = [ "Game" "ArcadeGame" ];
     icon = pname;
   } // desktopOverride);
 in
@@ -96,8 +96,11 @@ stdenv.mkDerivation ({
     cp -R ${exportFolder}/release/linux/bin/* $out/lib/${pname}/
     $STRIP -s "$out/lib/${pname}/${binaryName}"
     $STRIP -s "$out/lib/${pname}/lime.ndll"
-    wrapProgram "$out/lib/${pname}/${binaryName}" \
-      --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath buildInputs} \
+    mv "$out/lib/${pname}/${binaryName}" "$out/lib/${pname}/${binaryName}-nocd"
+
+    wrapProgram "$out/lib/${pname}/${binaryName}-nocd" \
+      --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath buildInputs}
+    makeWrapper "$out/lib/${pname}/${binaryName}-nocd" "$out/lib/${pname}/${binaryName}" \
       --run "cd $out/lib/${pname}"
     ln -s "$out/lib/${pname}/${binaryName}" $out/bin/${renameBinary}
 
