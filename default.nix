@@ -147,6 +147,8 @@ rec {
       # the size of the icon is actually 600x600 px
       cp art/gariconOG.png $out/share/icons/hicolor/512x512/apps/smoke-em-out-struggle.png
     '';
+
+    haxe = pkgs.haxe_4_1;
   };
 
   vs-impostor = mkFunkinMod {
@@ -237,23 +239,47 @@ rec {
       ./kade_replay_user.diff
     ]; # the usual patch stuff
 
-      installIcon = ''
-        mkdir -p $out/share/icons/hicolor/8x8/apps
-        mkdir -p $out/share/icons/hicolor/16x16/apps
-        mkdir -p $out/share/icons/hicolor/32x32/apps
-        mkdir -p $out/share/icons/hicolor/64x64/apps
-        mkdir -p $out/share/icons/hicolor/128x128/apps
-        mkdir -p $out/share/icons/hicolor/256x256/apps
-        mkdir -p $out/share/icons/hicolor/512x512/apps
-        cp art/icon8.png $out/share/icons/hicolor/8x8/apps/softmod.png
-        cp art/icon16.png $out/share/icons/hicolor/16x16/apps/softmod.png
-        cp art/icon32.png $out/share/icons/hicolor/32x32/apps/softmod.png
-        cp art/icon64.png $out/share/icons/hicolor/64x64/apps/softmod.png
-        cp art/icon128.png $out/share/icons/hicolor/128x128/apps/softmod.png
-        cp art/icon256.png $out/share/icons/hicolor/256x256/apps/softmod.png
-        cp art/icon512.png $out/share/icons/hicolor/512x512/apps/softmod.png
-      '';
-    };
+    installIcon = ''
+      mkdir -p $out/share/icons/hicolor/8x8/apps
+      mkdir -p $out/share/icons/hicolor/16x16/apps
+      mkdir -p $out/share/icons/hicolor/32x32/apps
+      mkdir -p $out/share/icons/hicolor/64x64/apps
+      mkdir -p $out/share/icons/hicolor/128x128/apps
+      mkdir -p $out/share/icons/hicolor/256x256/apps
+      mkdir -p $out/share/icons/hicolor/512x512/apps
+      cp art/icon8.png $out/share/icons/hicolor/8x8/apps/softmod.png
+      cp art/icon16.png $out/share/icons/hicolor/16x16/apps/softmod.png
+      cp art/icon32.png $out/share/icons/hicolor/32x32/apps/softmod.png
+      cp art/icon64.png $out/share/icons/hicolor/64x64/apps/softmod.png
+      cp art/icon128.png $out/share/icons/hicolor/128x128/apps/softmod.png
+      cp art/icon256.png $out/share/icons/hicolor/256x256/apps/softmod.png
+      cp art/icon512.png $out/share/icons/hicolor/512x512/apps/softmod.png
+    '';
+  };
+
+  vsrainbow = mkFunkinMod {
+    pname = "vs-rainbow-dash";
+    version = "unstable-2021-10-02";
+    binaryName = "Kade Engine";
+    renameBinary = "vsrainbow";
+    humanName = "VS Rainbow Dash";
+
+    /*src = pkgs.fetchFromGitHub {
+      owner = "marius851000";
+      repo = "Mirror-VS-Rainbow";
+      rev = "9415e9fd629c9f72c5538757d62002b56f61ae84";
+      sha256 = "sha256-gRH0PyuepmM2PdhU4NmOzqGn8ZSrNhmhNhc+u2QL00Q=";
+    };*/
+
+    src = /home/marius/Kade-Engine;
+
+    /*patches = [
+      ./kade_replay_user_2.diff
+    ];*/
+
+    extraBuildInputs = [ actuate extension-webm ];
+  };
+
   explorers_of_death = mkFunkinMod {
     pname = "explorers-of-death";
     version = "demo";
@@ -267,5 +293,39 @@ rec {
       rev = "8d1c480528874c3e616519ec776193f24f07e99e";
       sha256 = "sha256-nODCg4ZlrDPDe/ET4br6bQaht8ybNQOLlk2OqTYhFbE=";
     };
+  };
+
+  psych_engine = mkFunkinMod rec {
+    pname = "psych-engine";
+    version = "0.5.1";
+    binaryName = "PsychEngine";
+    renameBinary = "psych-engine";
+    humanName = "Psych Engine";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "ShadowMario";
+      repo = "FNF-PsychEngine";
+      rev = version;
+      sha256 = "sha256-QG515Se/wBt0a3oBDF4VjD8BZrjhZjZ0Zifkwe39Yi8=";
+    };
+
+#    patches = [ ./psych_engine.patch ];
+
+    extraAttributes = {
+      prePatch = ''
+        substituteInPlace Project.xml \
+          --replace "<assets path='example_mods' rename='mods' embed='false' if=\"MODS_ALLOWED\"/>" ""
+      '';
+    };
+
+    haxe = pkgs.haxe_4_2;
+  };
+
+  mkPsychEngineMod = x: pkgs.callPackage ./mkPsychEngineMod.nix ({inherit psych_engine; } // x);
+
+  dusk_till_dawn = mkPsychEngineMod {
+    src = ./dusk-till-dawn;
+    version = "something";
+    pname = "dusk-till-dawn";
   };
 }

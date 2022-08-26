@@ -23,7 +23,7 @@
       newgrounds
       polymod
       discord_rpc
-      linc_luajit
+      #linc_luajit
     ]) ++ extraBuildInputs,
   patches ? [],
   installIcon ? "",
@@ -84,7 +84,7 @@ stdenv.mkDerivation ({
       HXCPP_COMPILE_THREADS=1
     fi
     
-    haxelib run lime build linux -final
+    haxelib run lime build linux
 
     runHook postBuild
   '';

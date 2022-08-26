@@ -1,0 +1,159 @@
+diff --git a/source/ModsMenuState.hx b/source/ModsMenuState.hx
+index 3e76fa9..4f37bab 100644
+--- a/source/ModsMenuState.hx
++++ b/source/ModsMenuState.hx
+@@ -87,7 +87,7 @@ class ModsMenuState extends MusicBeatState
+ 		noModsTxt.screenCenter();
+ 		visibleWhenNoMods.push(noModsTxt);
+ 
+-		var path:String = 'modsList.txt';
++		var path:String = lime.system.System.applicationStorageDirectory + 'modsList.txt';
+ 		if(FileSystem.exists(path))
+ 		{
+ 			var leMods:Array<String> = CoolUtil.coolTextFile(path);
+@@ -106,7 +106,7 @@ class ModsMenuState extends MusicBeatState
+ 
+ 		// FIND MOD FOLDERS
+ 		var boolshit = true;
+-		if (FileSystem.exists("modsList.txt")){
++		if (FileSystem.exists(lime.system.System.applicationStorageDirectory + "modsList.txt")){
+ 			for (folder in Paths.getModDirectories())
+ 			{
+ 				if(!Paths.ignoreModFolders.contains(folder))
+@@ -418,7 +418,7 @@ class ModsMenuState extends MusicBeatState
+ 			fileStr += values[0] + '|' + (values[1] ? '1' : '0');
+ 		}
+ 
+-		var path:String = 'modsList.txt';
++		var path:String = lime.system.System.applicationStorageDirectory + 'modsList.txt';
+ 		File.saveContent(path, fileStr);
+ 	}
+ 
+diff --git a/source/Paths.hx b/source/Paths.hx
+index 0516d52..b09fd04 100644
+--- a/source/Paths.hx
++++ b/source/Paths.hx
+@@ -334,7 +334,7 @@ class Paths
+ 	}
+ 
+ 	inline static public function mods(key:String = '') {
+-		return 'mods/' + key;
++		return lime.system.System.applicationStorageDirectory + 'mods/' + key;
+ 	}
+ 	
+ 	inline static public function modsFont(key:String) {
+@@ -380,7 +380,7 @@ class Paths
+ 				return fileToCheck;
+ 			}
+ 		}
+-		return 'mods/' + key;
++		return lime.system.System.applicationStorageDirectory + 'mods/' + key;
+ 	}
+ 
+ 	static public function getModDirectories():Array<String> {
+diff --git a/source/TitleState.hx b/source/TitleState.hx
+index e63f92e..04943df 100644
+--- a/source/TitleState.hx
++++ b/source/TitleState.hx
+@@ -80,9 +80,9 @@ class TitleState extends MusicBeatState
+ 	{
+ 		#if MODS_ALLOWED
+ 		// Just to load a mod on start up if ya got one. For mods that change the menu music and bg
+-		if (FileSystem.exists("modsList.txt")){
++		if (FileSystem.exists(lime.system.System.applicationStorageDirectory + "modsList.txt")){
+ 			
+-			var list:Array<String> = CoolUtil.listFromString(File.getContent("modsList.txt"));
++			var list:Array<String> = CoolUtil.listFromString(File.getContent(lime.system.System.applicationStorageDirectory + "modsList.txt"));
+ 			var foundTheTop = false;
+ 			for (i in list){
+ 				var dat = i.split("|");
+@@ -96,10 +96,10 @@ class TitleState extends MusicBeatState
+ 		#end
+ 		
+ 		#if (desktop && MODS_ALLOWED)
+-		var path = "mods/" + Paths.currentModDirectory + "/images/gfDanceTitle.json";
++		var path = lime.system.System.applicationStorageDirectory + "mods/" + Paths.currentModDirectory + "/images/gfDanceTitle.json";
+ 		//trace(path, FileSystem.exists(path));
+ 		if (!FileSystem.exists(path)) {
+-			path = "mods/images/gfDanceTitle.json";
++			path = lime.system.System.applicationStorageDirectory + "mods/images/gfDanceTitle.json";
+ 		}
+ 		//trace(path, FileSystem.exists(path));
+ 		if (!FileSystem.exists(path)) {
+@@ -113,17 +113,20 @@ class TitleState extends MusicBeatState
+ 		#end
+ 		
+ 		#if (polymod && !html5)
+-		if (sys.FileSystem.exists('mods/')) {
++		var folderPath:String = lime.system.System.applicationStorageDirectory + 'mods/';
++		if (sys.FileSystem.exists()) {
+ 			var folders:Array<String> = [];
+-			for (file in sys.FileSystem.readDirectory('mods/')) {
+-				var path = haxe.io.Path.join(['mods/', file]);
++			for (file in sys.FileSystem.readDirectory(folderPath)) {
++				var path = haxe.io.Path.join([folderPath, file]);
+ 				if (sys.FileSystem.isDirectory(path)) {
+ 					folders.push(file);
+ 				}
+ 			}
+ 			if(folders.length > 0) {
+-				polymod.Polymod.init({modRoot: "mods", dirs: folders});
++				polymod.Polymod.init({modRoot: lime.system.System.applicationStorageDirectory + "mods", dirs: folders});
+ 			}
++		} else {
++			createDirectory(folderPath);
+ 		}
+ 		#end
+ 		
+@@ -263,10 +266,10 @@ class TitleState extends MusicBeatState
+ 		
+ 		
+ 		#if (desktop && MODS_ALLOWED)
+-		var path = "mods/" + Paths.currentModDirectory + "/images/logoBumpin.png";
++		var path = lime.system.System.applicationStorageDirectory + "mods/" + Paths.currentModDirectory + "/images/logoBumpin.png";
+ 		//trace(path, FileSystem.exists(path));
+ 		if (!FileSystem.exists(path)){
+-			path = "mods/images/logoBumpin.png";
++			path = lime.system.System.applicationStorageDirectory + "mods/images/logoBumpin.png";
+ 		}
+ 		//trace(path, FileSystem.exists(path));
+ 		if (!FileSystem.exists(path)){
+@@ -290,10 +293,10 @@ class TitleState extends MusicBeatState
+ 			gfDance = new FlxSprite(titleJSON.gfx, titleJSON.gfy);
+ 		
+ 		#if (desktop && MODS_ALLOWED)
+-		var path = "mods/" + Paths.currentModDirectory + "/images/gfDanceTitle.png";
++		var path = lime.system.System.applicationStorageDirectory + "mods/" + Paths.currentModDirectory + "/images/gfDanceTitle.png";
+ 		//trace(path, FileSystem.exists(path));
+ 		if (!FileSystem.exists(path)){
+-			path = "mods/images/gfDanceTitle.png";
++			path = lime.system.System.applicationStorageDirectory + "mods/images/gfDanceTitle.png";
+ 		//trace(path, FileSystem.exists(path));
+ 		}
+ 		if (!FileSystem.exists(path)){
+@@ -316,10 +319,10 @@ class TitleState extends MusicBeatState
+ 
+ 		titleText = new FlxSprite(titleJSON.startx, titleJSON.starty);
+ 		#if (desktop && MODS_ALLOWED)
+-		var path = "mods/" + Paths.currentModDirectory + "/images/titleEnter.png";
++		var path = lime.system.System.applicationStorageDirectory + "mods/" + Paths.currentModDirectory + "/images/titleEnter.png";
+ 		//trace(path, FileSystem.exists(path));
+ 		if (!FileSystem.exists(path)){
+-			path = "mods/images/titleEnter.png";
++			path = lime.system.System.applicationStorageDirectory + "mods/images/titleEnter.png";
+ 		}
+ 		//trace(path, FileSystem.exists(path));
+ 		if (!FileSystem.exists(path)){
+diff --git a/source/WeekData.hx b/source/WeekData.hx
+index 1da786d..8a032c0 100644
+--- a/source/WeekData.hx
++++ b/source/WeekData.hx
+@@ -83,7 +83,7 @@ class WeekData {
+ 		weeksLoaded.clear();
+ 		#if MODS_ALLOWED
+ 		var disabledMods:Array<String> = [];
+-		var modsListPath:String = 'modsList.txt';
++		var modsListPath:String = lime.system.System.applicationStorageDirectory + 'modsList.txt';
+ 		var directories:Array<String> = [Paths.mods(), Paths.getPreloadPath()];
+ 		var originalLength:Int = directories.length;
+ 		if(FileSystem.exists(modsListPath))

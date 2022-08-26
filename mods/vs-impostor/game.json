@@ -1,0 +1,14 @@
+{
+    "type": "sourcemod",
+    "name": "VS Impostor",
+    "source": {
+        "type": "github",
+        "owner": "Clowfoe",
+        "repo": "VS-Impostor-GIT",
+        "rev": "fc53096f79d0183da80019254a4aa20a0f1829eb",
+        "nixSha": "sha256-FhvNGAcxQuQAL0Bmb4j2+wITJ3tiT0Cz4v0h8n/3zo8="
+    },
+    "built_binary_name": "Kade Engine",
+    "--NOTE": "Seemingly no icon",
+    "patches": [ "./kade_replay_user.diff" ]
+}
