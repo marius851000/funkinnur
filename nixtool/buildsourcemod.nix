@@ -8,6 +8,9 @@
   haxe, neko, makeWrapper, haxePackages,
 }:
 
+let
+  extraLibs = callPackage ./haxelibs.nix { };
+in
 {
   name,
   pname,
@@ -20,7 +23,7 @@
   patches ? [],
   ...
 } @ args:
-let 
+let
   apiFile = builtins.toFile "APIStuff.hx"
   ''
     package;
@@ -44,16 +47,14 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ haxe neko makeWrapper ]
     ++ (with haxePackages; [
       hxcpp
-      hscript
-      openfl
-      lime
-      flixel
-      flixel-addons
-      flixel-ui
-      newgrounds
-      polymod
-      discord_rpc
-      linc_luajit
+      extraLibs.hscript
+      extraLibs.openfl
+      extraLibs.lime
+      extraLibs.flixel
+      extraLibs.flixel-addons
+      extraLibs.flixel-ui
+      extraLibs.newgrounds
+      extraLibs.polymod
     ]);
   
   postPatch = ''
@@ -81,18 +82,18 @@ stdenv.mkDerivation rec {
       HXCPP_COMPILE_THREADS=1
     fi
 
-    haxelib run lime build linux -final
+    haxelib run lime build linux
 
     runHook postBuild
-  '';
+  ''; #TODO: -final
 
   installPhase = ''
     runHook preInstall
 
     mkdir -p $out/{bin,lib/${pname}}
     cp -R ${export_folder}/release/linux/bin/* $out/lib/${pname}/
-    $STRIP -s "$out/lib/${pname}/${built_binary_name}"
-    $STRIP -s "$out/lib/${pname}/lime.ndll"
+    #$STRIP -s "$out/lib/${pname}/${built_binary_name}"
+    #$STRIP -s "$out/lib/${pname}/lime.ndll"
     mv "$out/lib/${pname}/${built_binary_name}" "$out/lib/${pname}/${built_binary_name}-nocd"
 
     wrapProgram "$out/lib/${pname}/${built_binary_name}-nocd" \

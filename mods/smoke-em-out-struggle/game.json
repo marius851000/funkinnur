@@ -8,7 +8,6 @@
         "rev": "9525bb6eeb7104b36fb88aeda5d559111e05ce6d",
         "nixSha": "sha256-YG1lUJs+4FnB2ILzWyhq+qlYE63uzLEuwnb7IhBrtVQ="
     },
-    "built_binary_name": "vsgarcello",
     "icons": {
         "16": "art/garicon16.png",
         "32": "art/garicon32.png",

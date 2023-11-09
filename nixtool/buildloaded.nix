@@ -5,11 +5,9 @@ let
 
   varioustool = callPackage ./various.nix {};
 
-  getsource = callPackage ./source.nix {};
-
   getsourceversion = callPackage ./sourceversion.nix {};
 in
-{
+src_parsed: {
   type,
   name,
   pname ? varioustool.sluggify name,
@@ -23,7 +21,7 @@ in
 let
   args = argsBase // {
     inherit pname result_binary_name version patches;
-    src = getsource source;
+    src = src_parsed;
   };
 in
 if type == "sourcemod" then buildsourcemod args else throw "unknown type of mod " + type
