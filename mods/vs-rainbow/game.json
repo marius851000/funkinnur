@@ -1,0 +1,11 @@
+{
+    "type": "sourcemod",
+    "name": "VS Rainbow Dash",
+    "source": {
+        "type": "github",
+        "owner": "marius851000",
+        "repo": "Mirror-VS-Rainbow",
+        "rev": "9415e9fd629c9f72c5538757d62002b56f61ae84",
+        "nixSha": "sha256-gRH0PyuepmM2PdhU4NmOzqGn8ZSrNhmhNhc+u2QL00Q="
+    }
+}

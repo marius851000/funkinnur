@@ -1,0 +1,24 @@
+{
+    "type": "sourcemod",
+    "name": "Psych Engine",
+    "built_binary_name": "PsychEngine",
+    "source": {
+        "type": "github",
+        "owner": "ShadowMario",
+        "repo": "FNF-PsychEngine",
+        "rev": "0.6.3",
+        "nixSha": "sha256-OKtcBVn8wL87Pe89QivIMfMfVuYxjLueppDwqgMCap4="
+    },
+    "modules": {
+        "linc_luajit": {
+            "source": {
+                "type": "github",
+                "owner": "nebulazorua",
+                "repo": "linc_luajit",
+                "rev": "a098f2b84fc3d058acae67c1787132c01eef0a19",
+                "nixSha": "sha256-LwQAFN4hBlLjabBJ7JKoqoqqNSOqMgId4vsI5RngXrM="
+            }
+        },
+        "discord_rpc": {}
+    }
+}

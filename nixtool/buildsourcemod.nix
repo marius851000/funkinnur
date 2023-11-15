@@ -17,6 +17,7 @@ in
   result_binary_name,
   version,
   src,
+  modules ? {},
   source_folder ? "source",
   export_folder ? "export",
   built_binary_name,
@@ -38,11 +39,61 @@ let
   varioustool = callPackage ./various.nix {};
 
   installmetafile = callPackage ./installmetafile.nix {};
+
+  getsource = callPackage ./source.nix {};
+
+  getsourceversion = callPackage ./sourceversion.nix {};
+
+  modules_default = {
+    "linc_luajit" = {
+      enabled = false;
+      package = extraLibs.linc_luajit;
+    };
+    "discord_rpc" = {
+      enabled = false;
+      package = extraLibs.discord_rpc;
+    };
+  };
+
+  modules_to_use = lib.mapAttrs (
+    name: value:
+      if (modules ? "${name}") || (value.enabled) then
+        let
+          module_user_conf = modules."${name}";
+        in
+          if (if module_user_conf ? enabled then module_user_conf.enabled else true) then
+            value // {
+              enabled = true;
+              package = value.package.overrideAttrs (old: {
+                src = if module_user_conf ? source then
+                  getsource module_user_conf.source
+                else
+                  old.src;
+                name = if module_user_conf ? source then
+                  (name + "-" + (getsourceversion module_user_conf.source))
+                else
+                  old.name;
+              });
+            }
+          else
+            (value // {
+              enabled = false;
+            })
+      else
+        value
+      /*haxePackages.buildHaxeLib {
+        libname = name;
+        version = getsourceversion value.source;
+        src = getsource value.source;
+        meta = {};
+      }*/
+    )
+    modules_default;
 in
 stdenv.mkDerivation rec {
   inherit pname version src patches;
 
-  buildInputs = [alsaLib libpulseaudio libGL libX11 libXdmcp libXext libXi libXinerama libXrandr luajit ];
+  buildInputs = [ alsaLib libpulseaudio libGL libX11 libXdmcp libXext libXi libXinerama libXrandr luajit ];
 
   nativeBuildInputs = [ haxe neko makeWrapper ]
     ++ (with haxePackages; [
@@ -55,7 +106,13 @@ stdenv.mkDerivation rec {
       extraLibs.flixel-ui
       extraLibs.newgrounds
       extraLibs.polymod
-    ]);
+      extraLibs.extension-webm # should not be included by default (actually, it should parse required deps in the extend json phase)
+      extraLibs.actuate
+    ]) ++
+    (
+      lib.mapAttrsToList (key: value: if value.enabled then value.package else null)
+      (modules_to_use)
+    );
   
   postPatch = ''
     if test ! -f ${source_folder}/APIStuff.hx; then
