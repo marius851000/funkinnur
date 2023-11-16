@@ -53,6 +53,10 @@ let
       enabled = false;
       package = extraLibs.discord_rpc;
     };
+    "hxcodec" = {
+      enable = false;
+      package = builtins.trace "${extraLibs.hxcodec}" extraLibs.hxcodec;
+    };
   };
 
   modules_to_use = lib.mapAttrs (
@@ -146,6 +150,7 @@ stdenv.mkDerivation rec {
 
   installPhase = ''
     runHook preInstall
+    find
 
     mkdir -p $out/{bin,lib/${pname}}
     cp -R ${export_folder}/release/linux/bin/* $out/lib/${pname}/

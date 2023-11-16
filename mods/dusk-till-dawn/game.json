@@ -1,0 +1,8 @@
+{
+    "type": "psych-engine",
+    "source": {
+        "type": "urlzip",
+        "url": "https://archive.mariusdavid.fr/funkin/dusk-till-dawn-release-v1.3.zip",
+        "hash": "sha256-mH9dsmdKN7V4oPYnj2rzMavVsGsXkXosj7OWfH+wJHo="
+    }
+}

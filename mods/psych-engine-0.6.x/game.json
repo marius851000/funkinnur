@@ -6,8 +6,9 @@
         "type": "github",
         "owner": "ShadowMario",
         "repo": "FNF-PsychEngine",
-        "rev": "0.6.3",
-        "nixSha": "sha256-OKtcBVn8wL87Pe89QivIMfMfVuYxjLueppDwqgMCap4="
+        "rev": "0.6.2",
+        "--comment": "is this really the last one available?",
+        "nixSha": "sha256-DQ6NRzJ/zTb0bb2Jp6ujeHmhn3lqz0mYPHYfQthQ43Q="
     },
     "modules": {
         "linc_luajit": {
@@ -19,6 +20,7 @@
                 "nixSha": "sha256-LwQAFN4hBlLjabBJ7JKoqoqqNSOqMgId4vsI5RngXrM="
             }
         },
-        "discord_rpc": {}
+        "discord_rpc": {},
+        "hxcodec": {}
     }
 }

@@ -11,4 +11,6 @@ in
   vs-impostor = build ./mods/smoke-em-out-struggle;
 
   psych-engine = build ./mods/psych-engine-0.6.x;
+
+  dusk-till-dawn = build ./mods/dusk-till-dawn;
 }

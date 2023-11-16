@@ -32,7 +32,13 @@ if working_json["type"] == "sourcemod":
             working_json["built_binary_name"] = project_app.attrib["file"]
         if "name" not in working_json:
             working_json["name"] = project_app.attrib["title"]
-
+elif working_json["type"] == "psych-engine":
+    if "name" not in working_json:
+        path_to_pack = os.path.join(source_tree_path, "pack.json")
+        f = open(path_to_pack)
+        pack_data = json.load(f)
+        f.close()
+        working_json["name"] = pack_data["name"]
 else:
     print("unrecognized mod kind: {}".format(working_json["type"]))
 

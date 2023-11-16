@@ -1,4 +1,4 @@
-{ callPackage, fetchFromGitHub }:
+{ callPackage, fetchFromGitHub, fetchzip }:
 
 {
   type
@@ -12,5 +12,9 @@ let
     rev = args.rev;
     sha256 = args.nixSha;
   };
+  fromZipUrl = fetchzip {
+    url = args.url;
+    sha256 = args.hash;
+  };
 in
-if type == "github" then fromGithub else (throw "source type not supported : " + type)
+if type == "github" then fromGithub else if type == "urlzip" then fromZipUrl else (throw "source type not supported : " + type)

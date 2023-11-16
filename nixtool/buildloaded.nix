@@ -3,6 +3,8 @@
 let
   buildsourcemod = callPackage ./buildsourcemod.nix {};
 
+  build_psych_engine_mod = callPackage ./build_psych_engine_mod.nix {};
+
   varioustool = callPackage ./various.nix {};
 
   getsourceversion = callPackage ./sourceversion.nix {};
@@ -24,5 +26,5 @@ let
     src = src_parsed;
   };
 in
-if type == "sourcemod" then buildsourcemod args else throw "unknown type of mod " + type
+if type == "sourcemod" then buildsourcemod args else if type == "psych-engine" then build_psych_engine_mod args else throw "unknown type of mod " + type
 

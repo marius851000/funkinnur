@@ -8,6 +8,7 @@
 , writeText
 , haxe
 , neko
+, libvlc
 }:
 
 let
@@ -33,6 +34,7 @@ let
     , sha256 ? null
     , src ? null
     , meta
+    , linc_lib ? null
     , ...
     } @ attrs:
     stdenv.mkDerivation (attrs // {
@@ -46,13 +48,26 @@ let
         stripRoot = false;
       });
 
+      patchPhase = attrs.patchPhase or ''
+        runHook prePatch
+        ${lib.optionalString (linc_lib != null) ''
+          # Workaround to permit cache to work correctly with linc
+          # When there are dependancies in multiple directories, it create a random temporary folder with them merged. This usually isn’t a problem,
+          # but here, -I<include_path>, a compiler arguments that’s used in the cache hash, change at every compilation
+          # Also, can’t modify Linc.hx directly, as they are supposed to be identical (I think?)
+          substituteInPlace linc/linc_${linc_lib}.xml \
+            --replace $\{LINC_${lib.toUpper linc_lib}_PATH} $out/lib/haxe/${withCommas libname}/${withCommas version}/
+        ''}
+        runHook postPatch
+      '';
+
       installPhase = attrs.installPhase or ''
         runHook preInstall
         (
-          if [ $(ls $src | wc -l) == 1 ]; then
-            cd $src/* || cd $src
+          if [ $(ls . | wc -l) == 1 ]; then
+            cd ./* || cd .
           else
-            cd $src
+            cd .
           fi
           ${installLibHaxe { inherit libname version; }}
         )
@@ -199,6 +214,7 @@ rec {
       fetchSubmodules = true;
       sha256 = "0w3f9772ypqil348dq8xvhh5g1z5dii5rrwlmmvcdr2gs2c28c7k";
     };
+    linc_lib = "discord_rpc";
     meta = with lib; {
       license = licenses.mit;
       description = "Native bindings for discord-rpc";
@@ -214,6 +230,7 @@ rec {
       rev = "bcb4254e057f8a20710e2cd0985086370d57ecd1";
       sha256 = "sha256-LuBBbHntgc3OnQiK+4eaGW849p2GWOUfMppUQIQaor0=";
     };
+    linc_lib = "lua";
     meta = with lib; {
       license = licenses.mit;
       description = "Haxe/hxcpp native bindings for LuaJIT";
@@ -254,7 +271,6 @@ rec {
     pname = "extension-webm";
     version = "unstable-2021-06-01";
 
-
     src = fetchFromGitHub {
       owner = "KadeDev";
       repo = "extension-webm";
@@ -272,7 +288,7 @@ rec {
       mkdir -p "$devrepo/${withCommas pname}"
       echo $(pwd) > "$devrepo/${withCommas pname}/.dev"
       export HAXELIB_PATH="$HAXELIB_PATH:$devrepo"
-      haxelib run lime rebuild extension-webm linux
+      haxelib run lime rebuild extension-webm linux -64 -release
 
       runHook postBuild
     '';
@@ -289,4 +305,34 @@ rec {
       platforms = lib.platforms.linux;
     };
   };
+  
+  hxcodec = 
+    let
+      libvlc_no_lua = (libvlc.override { lua5 = null; }).overrideAttrs (old: {
+        configureFlags = old.configureFlags ++ [ "--disable-lua" ];
+      });
+    in buildHaxeLib rec {
+      libname = "hxCodec";
+      version = "2.5.1";
+      sha256 = "sha256-2tqKIXzZOcOE+iQ4/k3j7iNLDnhbrBRxDAg2AWdGyWc=";
+      propagatedBuildInputs = [ libvlc_no_lua ];
+      # it seems libvlccore is for aarch64 and libvlc for x86-64. Just replace both.
+      prePatch = ''
+        substituteInPlace vlc/lib/LibVLCBuild.xml \
+          --replace $\{haxelib:hxCodec}/lib/vlc/lib/Linux/libvlc.so.5 ${libvlc_no_lua}/lib/libvlc.so \
+          --replace $\{haxelib:hxCodec}/lib/vlc/lib/Linux/libvlccore.so.9 ${libvlc_no_lua}/lib/libvlccore.so \
+          --replace $\{haxelib:hxCodec}/lib/vlc/include/ ${libvlc_no_lua}/include \
+          --replace $\{haxelib:hxCodec}/lib/vlc/src $out/lib/haxe/${withCommas libname}/${withCommas version}/lib/vlc/src
+        # we want to remove every bundled binary
+        rm lib/vlc/lib/Linux/*
+        rm lib/vlc/lib/Windows/*
+        rm dlls/*
+        rm -r ./ndll
+        rm -r ./plugins
+      '';
+      meta = with lib; {
+        license = licenses.mit;
+        description = "Native video support for HaxeFlixel & OpenFL";
+      };
+    };
 }

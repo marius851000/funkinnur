@@ -5,12 +5,12 @@ json_path: source:
 stdenv.mkDerivation {
   name = "json-extended";
 
-  dontUnpack = true;
+  src = source;
 
   nativeBuildInputs = [ python3 ];
 
   buildPhase = ''
-    python3 ${./analyze_source.py} ${source} ${json_path} ./dest.json
+    python3 ${./analyze_source.py} ./ ${json_path} ./dest.json
   '';
 
   installPhase = ''
