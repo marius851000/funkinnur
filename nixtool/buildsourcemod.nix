@@ -6,6 +6,9 @@
 
   # default nativeBuildInputs
   haxe, neko, makeWrapper, haxePackages,
+
+  # extra
+  libvlc
 }:
 
 let
@@ -43,7 +46,7 @@ let
   getsource = callPackage ./source.nix {};
 
   getsourceversion = callPackage ./sourceversion.nix {};
-
+  
   modules_default = {
     "linc_luajit" = {
       enabled = false;
@@ -54,8 +57,14 @@ let
       package = extraLibs.discord_rpc;
     };
     "hxcodec" = {
-      enable = false;
+      enabled = false;
       package = builtins.trace "${extraLibs.hxcodec}" extraLibs.hxcodec;
+    };
+    "vlc" = {
+      enabled = false;
+      package = (libvlc.override { lua5 = null; }).overrideAttrs (old: {
+        configureFlags = old.configureFlags ++ [ "--disable-lua" ];
+      });
     };
   };
 
@@ -76,7 +85,7 @@ let
                 name = if module_user_conf ? source then
                   (name + "-" + (getsourceversion module_user_conf.source))
                 else
-                  old.name;
+                  if old ? name then old.name else "${old.pname}-${old.version}";
               });
             }
           else

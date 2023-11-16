@@ -12,5 +12,7 @@ in
 
   psych-engine = build ./mods/psych-engine-0.6.x;
 
+  psych-engine-05x = build ./mods/psych-engine-0.5.x;
+
   dusk-till-dawn = build ./mods/dusk-till-dawn;
 }

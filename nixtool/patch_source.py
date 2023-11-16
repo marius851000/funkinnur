@@ -33,6 +33,16 @@ REPLACEMENTS = [
         "video_on_linux", # from psych-engine
         'name="VIDEOS_ALLOWED" if="web || windows"',
         'name="VIDEOS_ALLOWED" if="web || desktop"'
+    ],
+    [
+        "cpp_no_windows_h", # from psych engine 0.5
+        "#include <windows.h>",
+        ""
+    ],
+    [
+        "cpp_fix_case_stdint_h", # from psych engine 0.5
+        "#include <StdInt.h>",
+        "#include <stdint.h>"
     ]
 ]
 
@@ -47,7 +57,7 @@ for path, dirs, files in os.walk(source_path):
         dest_file_path = os.path.join(dest_path, os.path.relpath(path, source_path), file)
         os.makedirs(os.path.dirname(dest_file_path), exist_ok=True)
         print(source_file_path, dest_file_path)
-        if file.endswith(".hx") or file.endswith(".xml"):
+        if file.endswith(".hx") or file.endswith(".xml") or file.endswith(".cpp"):
             try:
                 f = open(source_file_path)
                 t = f.read()

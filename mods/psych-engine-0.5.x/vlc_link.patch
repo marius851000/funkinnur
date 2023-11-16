@@ -1,0 +1,15 @@
+diff --git a/source/vlc/LibVLCBuild.xml b/source/vlc/LibVLCBuild.xml
+index 35a7302..5ca72d8 100644
+--- a/source/vlc/LibVLCBuild.xml
++++ b/source/vlc/LibVLCBuild.xml
+@@ -7,6 +7,10 @@
+ 		<compilervalue name="-I" value="${CPP_DIR}/src/" />
+ 	</files>
+ 	
++    <target id='haxe' tool='linker'>
++        <lib name='-lvlc' if='linux'/>
++    </target>
++
+ 	<target id='haxe' tool='linker' toolid='exe'>
+ 		<lib name='${CPP_DIR}/lib/libvlc.lib' if='windows'/>
+ 		<lib name='${CPP_DIR}/lib/libvlccore.lib' if='windows'/>
