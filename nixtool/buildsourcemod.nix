@@ -70,7 +70,7 @@ let
 
   modules_to_use = lib.mapAttrs (
     name: value:
-      if (modules ? "${name}") || (value.enabled) then
+      if (modules ? "${name}") || (value.enabled ? false) then
         let
           module_user_conf = modules."${name}";
         in
